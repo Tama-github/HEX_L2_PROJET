@@ -14,24 +14,10 @@
 
 int main (int argc, char * argv[]) {
 
-	SDL_Surface * screen = NULL;
-	SDL_Surface * menu = NULL;
+	Window window; 
 
-	/* tous les boutons */
-	/*SDL_Surface * button-menu = NULL;
-	SDL_Surface * button-start = NULL;
-	SDL_Surface * button-load = NULL;
-	SDL_Surface * button-save = NULL;
-	SDL_Surface * button-undo = NULL;
-	SDL_Surface * button-historic = NULL;
-	SDL_Surface * button-quit = NULL;
-	SDL_Surface * button-hxh = NULL;
-	SDL_Surface * button-hxia1 = NULL;
-	SDL_Surface * button-hxia2 = NULL;*/
 
-	SDL_Rect position;
-    position.x = 0;
-    position.y = 0;
+
 
 	int stop = 0;
 	SDL_Event event;
@@ -46,35 +32,20 @@ int main (int argc, char * argv[]) {
     /*
      * Initialisation de la fenêtre
      */
-    screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE);
-    
-    if ( screen == NULL ) {
-        fprintf(stderr, "Couldn't set 640x480x8 video mode: %s\n", SDL_GetError());
-        exit(1);
-    }
-
-    /* couleurs */
-    Uint32 BACKGROUND_COLOR = SDL_MapRGB(screen->format, 200, 200, 200);
-    Uint32 MENU_COLOR = SDL_MapRGB(screen->format, 225, 225, 225);
-    //Uint32 BUTTON_COLOR = SDL_MapRGB(screen->format, 200, 200, 255);
-
-    SDL_FillRect(screen, NULL, BACKGROUND_COLOR);
-    SDL_WM_SetCaption("HEX", NULL);
-
-    
-
-    /* Initialisation des objets de la fenêtre */
-    //menu_init(menu, );
-    menu = SDL_CreateRGBSurface(SDL_SWSURFACE, MENU_WIDTH, MENU_HEIGHT, SCREEN_BPP, 0, 0, 0, 0);
-    SDL_FillRect(menu, NULL, MENU_COLOR);
-    SDL_BlitSurface(menu, NULL, screen, &position);
-
-    SDL_Flip(screen);
-	SDL_FreeSurface(menu);
+    window = createWindow ();
+    setInitMenu(window);
+    refreshWindow(window);
 
     /* Gestion des evenements */
     SDL_EnableKeyRepeat(10,10);
     while(!stop){
+        if (window->menuType == INIT_MENU) {
+            setInitMenu(window);
+        } else if (window->menuType == GAME_CHOICE_MENU) {
+            setGameChoiceMenu(window);
+        } else if (window->menuType == IN_GAME_MENU) {
+            setInitMenu(window);
+        }
         SDL_WaitEvent(&event);
         switch (event.type) {
             case SDL_QUIT:
@@ -83,14 +54,57 @@ int main (int argc, char * argv[]) {
             case SDL_MOUSEBUTTONUP:
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     printf("CLICK : x:%d  y:%d\n", event.button.x, event.button.y);
+                    if (isPosOnbutton(window->buttonMenu, event.button.x, event.button.y)) {
+                        setInitMenu(window);
+                    } else if (isPosOnbutton(window->buttonPlay, event.button.x, event.button.y)) {
+                        setGameChoiceMenu(window);
+                    } else if (isPosOnbutton(window->buttonLoad, event.button.x, event.button.y)) {
+                        //event
+                    } else if (isPosOnbutton(window->buttonSave, event.button.x, event.button.y)) {
+                        //event
+                    } else if (isPosOnbutton(window->buttonUndo, event.button.x, event.button.y)) {
+                        //event
+                    } else if (isPosOnbutton(window->buttonHistoric, event.button.x, event.button.y)) {
+                        //event
+                    } else if (isPosOnbutton(window->buttonQuit, event.button.x, event.button.y)) {
+                        stop = 1;
+                    } else if (isPosOnbutton(window->buttonHxH, event.button.x, event.button.y)) {
+                        //event
+                    } else if (isPosOnbutton(window->buttonHxIA2, event.button.x, event.button.y)) {
+                        //event
+                    } else if (isPosOnbutton(window->buttonHxIA1, event.button.x, event.button.y)) {
+                        //event
+                    }
                 }
                 break;
             case SDL_MOUSEMOTION:
+                if (isPosOnbutton(window->buttonMenu, event.button.x, event.button.y)) {
+                    window->buttonMenu = setImageForButton(window, window->buttonMenu, "Images/Bouton-menu-hover.jpg");
+                } else if (isPosOnbutton(window->buttonPlay, event.button.x, event.button.y)) {
+                    window->buttonPlay = setImageForButton(window, window->buttonPlay, "Images/Bouton-jouer-hover.jpg");
+                } else if (isPosOnbutton(window->buttonLoad, event.button.x, event.button.y)) {
+                    window->buttonLoad = setImageForButton(window, window->buttonLoad, "Images/Bouton-charger-hover.jpg");
+                } else if (isPosOnbutton(window->buttonSave, event.button.x, event.button.y)) {
+                    window->buttonSave = setImageForButton(window, window->buttonSave, "Images/Bouton-sauver-hover.jpg");
+                } else if (isPosOnbutton(window->buttonUndo, event.button.x, event.button.y)) {
+                    window->buttonUndo = setImageForButton(window, window->buttonUndo, "Images/Bouton-annuler-hover.jpg");
+                } else if (isPosOnbutton(window->buttonHistoric, event.button.x, event.button.y)) {
+                    window->buttonHistoric = setImageForButton(window, window->buttonHistoric, "Images/Bouton-historique-hover.jpg");
+                } else if (isPosOnbutton(window->buttonQuit, event.button.x, event.button.y)) {
+                    window->buttonQuit = setImageForButton(window, window->buttonQuit, "Images/Bouton-quiter-hover.jpg");
+                } else if (isPosOnbutton(window->buttonHxH, event.button.x, event.button.y)) {
+                    window->buttonHxH = setImageForButton(window, window->buttonHxH, "Images/Bouton-hxh-hover.jpg");
+                } else if (isPosOnbutton(window->buttonHxIA2, event.button.x, event.button.y)) {
+                    window->buttonHxIA2 = setImageForButton(window, window->buttonHxIA2, "Images/Bouton-hxia2-hover.jpg");
+                } else if (isPosOnbutton(window->buttonHxIA1, event.button.x, event.button.y)) {
+                    window->buttonHxIA1 = setImageForButton(window, window->buttonHxIA1, "Images/Bouton-hxia1-hover.jpg");
+                }
                 printf("MOVE : x:%d  y:%d\n", event.motion.x, event.motion.y);
                 break;
         }
+        refreshWindow(window);
     }
 
-    SDL_Quit();
+    closeWindow(window);
 	return 0;
 }

@@ -11,11 +11,13 @@ typedef struct et_hexagone* Hexagone;
 
 /*Constructeur*/
 
-Hexagone createHexagon (int abs, int ord);
+Hexagone createHexagone (int abs, int ord);
 
-void deleteHexagon (Hexagone h);
+void deleteHexagone (Hexagone h);
 
-void setIdPlayerHexagon (Hexagone h, int id);
+void setIdPlayerHexagone (Hexagone h, int id);
+
+int isCoordOnHexagone (Hexagone h, int x, int y);
 
 int isAdjacentHexagone (Hexagone h, Hexagone i);
 

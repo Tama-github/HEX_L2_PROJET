@@ -14,7 +14,7 @@ struct et_hexagone{
   int ordonnee;
 };
 
-Hexagone createHexagon (int abs, int ord) {
+Hexagone createHexagone (int abs, int ord) {
   Hexagone h = (Hexagone)malloc(sizeof(struct et_hexagone*));
   h->abscisse = abs;
   h->ordonnee = ord;
@@ -22,12 +22,21 @@ Hexagone createHexagon (int abs, int ord) {
   return(h);
 }
 
-void deleteHexagon (Hexagone h) {
+void deleteHexagone (Hexagone h) {
   free(h);
 }
 
-void setIdPlayerHexagon (Hexagone h, int id) {
+void setIdPlayerHexagone (Hexagone h, int id) {
   h->id_player = id;
+}
+
+int isCoordOnHexagone (Hexagone h, int x, int y) {
+  int res = 0;
+  if (x >= h->abscisse && x <= h->abscisse + 30 
+    && y >= h->ordonnee && y <= h->ordonnee + 30) {
+    res = 1;
+  }
+  return res;
 }
 
 int isAdjacentHexagone (Hexagone h, Hexagone i) {

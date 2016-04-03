@@ -16,9 +16,6 @@ int main (int argc, char * argv[]) {
 
 	Window window; 
 
-
-
-
 	int stop = 0;
 	SDL_Event event;
 	if( SDL_Init(SDL_INIT_EVERYTHING) < 0 ) {

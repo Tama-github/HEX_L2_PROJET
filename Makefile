@@ -1,5 +1,5 @@
 HEX: HEX.o Interface.o hexagone.o board.o game.o
-		gcc HEX.o Interface.o hexagone.o board.o game.o -o HEX -g -ggdb `sdl-config --cflags --libs` -lSDL_image
+		gcc HEX.o Interface.o hexagone.o board.o game.o -o HEX -g -ggdb `sdl-config --cflags --libs` -lSDL_image -lSDL_ttf
 
 HEX.o: src/HEX.c
 		gcc -c src/HEX.c -Wall -g -ggdb -O0

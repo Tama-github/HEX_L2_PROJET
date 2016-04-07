@@ -9,22 +9,18 @@
 #include "board.h"
 
 
-struct s_Board {
-	Hexagone board [BOARD_LENGTH][BOARD_LENGTH];
-};
-
 Board createBoard () {
 	Board b = (Board)malloc(sizeof(struct s_Board));
 	int i, j;
 	int x = FIRST_HEXAGONE_POSITION_X;
-	int y;
+	int y = FIRST_HEXAGONE_POSITION_Y;
 	for (i = 0; i < BOARD_LENGTH; i++) {
-		y = FIRST_HEXAGONE_POSITION_Y + i*BOARD_EACH_LINE_SHIFT;
+		x = FIRST_HEXAGONE_POSITION_X + i*BOARD_EACH_LINE_SHIFT;
 		for (j = 0; j < BOARD_LENGTH; j++) {
 			b->board[i][j] = createHexagone(x, y);
-			y = y + HEXAGONE_LENGTH;
+			x = x + HEXAGONE_LENGTH;
 		}
-		x = x + HEXAGONE_HEIGHT;
+		y = y + BOARD_EACH_COLUMN_SHIFT;
 	}
 	return b;
 }
@@ -45,7 +41,7 @@ Hexagone findHexagoneOnBoard (Board board, int x, int y) {
 	int find = 0;
 	for (i = 0; i < BOARD_LENGTH && !find; i++) {
 		for (j = 0; j < BOARD_LENGTH && !find; j++) {
-			if (isCoordOnHexagone(board->board[i][j], x, y)) {
+			if (isCoordOnHexagone(board->board[i][j], x, y) && !find) {
 				res = board->board[i][j];
 				find = 1;
 			}

@@ -6,14 +6,9 @@
 #include <ctype.h>
 #include <errno.h>
 
-#include "board.h"
 #include "game.h"
 
-struct s_Game {
-	int gameStatus;
-	int turnOf;
-	Board board;
-};
+
 
 Game createGame () {
 	Game game = (Game)malloc(sizeof(struct s_Game*));
@@ -36,13 +31,11 @@ void nextTurn (Game game) {
 	game->turnOf = (game->turnOf%2)+1;
 }
 
-Hexagone playAnHexagone (Game game, int x, int y) {
-	Hexagone hexToPlay;
-	hexToPlay = findHexagoneOnBoard(game->board, x, y);
-	if (hexToPlay != NULL) {
-		nextTurn(game);
-	}
-	return hexToPlay;
+void playAnHexagone (Hexagone hex, Game game) {
+	hex->idPlayer = game->turnOf;
+	nextTurn(game);
 }
+
+
 
 

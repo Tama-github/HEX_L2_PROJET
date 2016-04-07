@@ -3,7 +3,10 @@
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
+#include "SDL/SDL_ttf.h"
 
+#include "board.h"
+#include "game.h"
 
 /* types de menu */
  #define UNDIFINE_MENU 0
@@ -19,6 +22,12 @@
 /* dimmenssions et position du menu */
 #define MENU_WIDTH SCREEN_WIDTH/4
 #define MENU_HEIGHT SCREEN_HEIGHT
+
+/* dimenssions et position des logs*/
+#define LOGS_WIDTH SCREEN_WIDTH/2
+#define LOGS_HEIGHT 45
+#define LOGS_POSITION_X MENU_WIDTH + 10;
+#define LOGS_POSITION_Y SCREEN_HEIGHT - 60;
 
 /* dimenssion du plateau de jeu */
 #define BOARD_WIDTH 524
@@ -75,7 +84,11 @@
 /* quit */
 #define BUTTON_QUIT_MENU_3_POSITION_Y (BUTTON_UNDO_MENU_3_POSITION_Y + BUTTON_HEIGHT + 5)
 
+/* Jetons à afficher */
+#define TOKEN_RELATIVE_HEXAGONE_POSITION_X 4
+#define TOKEN_RELATIVE_HEXAGONE_POSITION_Y 4
 
+typedef struct s_Board* Board;
 
 struct s_Window {
 	int menuType;
@@ -83,6 +96,8 @@ struct s_Window {
 	SDL_Surface * screen;
 	SDL_Surface * menu;
 	SDL_Surface * board;
+	SDL_Surface * logs;
+	SDL_Surface * text;
 
 	/* tous les boutons */
 	SDL_Surface * buttonMenu;
@@ -108,5 +123,7 @@ void setInGameMenu (Window window);
 SDL_Surface* setImageForButton (Window window, SDL_Surface * button, char* imageHoverPath);
 void refreshWindow(Window window);
 int isPosOnbutton (SDL_Surface* button, int x, int y);
+void displayToken (Hexagone hex, int i, Window window);
+void displayBoard (Board board, Window window);
 
 #endif

@@ -8,49 +8,53 @@
 
 #include "hexagone.h"
 
-struct et_hexagone{
-  int id_player;
-  int abscisse;
-  int ordonnee;
-};
 
-Hexagone createHexagone (int abs, int ord) {
+
+Hexagone createHexagone (int x, int y) {
   Hexagone h = (Hexagone)malloc(sizeof(struct et_hexagone*));
-  h->abscisse = abs;
-  h->ordonnee = ord;
-  h->id_player = 0;
+  h->x = x;
+  h->y = y;
+  h->idPlayer = 0;
+  h->token = NULL;
+  h->hold = 0;
   return(h);
 }
 
 void deleteHexagone (Hexagone h) {
+  if (h->token != NULL) {
+    SDL_FreeSurface(h->token);
+  }
   free(h);
 }
 
 void setIdPlayerHexagone (Hexagone h, int id) {
-  h->id_player = id;
+  h->idPlayer = id;
 }
 
 int isCoordOnHexagone (Hexagone h, int x, int y) {
   int res = 0;
-  if (x >= h->abscisse && x <= h->abscisse + 30 
-    && y >= h->ordonnee && y <= h->ordonnee + 30) {
+  if (x >= h->x && x <= h->x + 30 
+    && y >= h->y && y <= h->y + 30) {
     res = 1;
+    h->hold = 1;
+  } else {
+    h->hold = 0;
   }
   return res;
 }
 
 int isAdjacentHexagone (Hexagone h, Hexagone i) {
-  if (h->abscisse == i->abscisse)
-    return(i->ordonnee == h->ordonnee-1 || i->ordonnee == h->ordonnee+1);
+  if (h->x == i->x)
+    return(i->y == h->y-1 || i->y == h->y+1);
   
-  if (h->ordonnee == i->ordonnee)
-    return(i->abscisse == h->abscisse-1 || i->abscisse == h->abscisse+1);
+  if (h->y == i->y)
+    return(i->x == h->x-1 || i->x == h->x+1);
+
+  if (h->y == i->y-1)
+    return(h->x == i->x-1);
   
-  if (h->ordonnee == i->ordonnee-1)
-    return(h->abscisse == i->abscisse-1);
-  
-  if (h->ordonnee == i->ordonnee+1)
-    return(h->abscisse == i->abscisse+1);
+  if (h->y == i->y+1)
+    return(h->x == i->x+1);
 
   return(0);
 }

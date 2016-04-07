@@ -7,6 +7,7 @@
 #include <errno.h>
 
 #include "Interface.h"
+
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 
@@ -30,6 +31,7 @@ Window createWindow () {
     /* color */
     Uint32 BACKGROUND_COLOR = SDL_MapRGB(res->screen->format, 200, 200, 200);
     Uint32 MENU_COLOR = SDL_MapRGB(res->screen->format, 255, 255, 255);
+    Uint32 LOGS_COLOR = SDL_MapRGB(res->screen->format, 20,22,22);
 
     /* creations des objets graphique */
     SDL_FillRect(res->screen, NULL, BACKGROUND_COLOR);
@@ -38,12 +40,26 @@ Window createWindow () {
     res->menu = SDL_CreateRGBSurface(SDL_SWSURFACE, MENU_WIDTH, MENU_HEIGHT, SCREEN_BPP, 0, 0, 0, 0);
     SDL_FillRect(res->menu, NULL, MENU_COLOR);
     SDL_BlitSurface(res->menu, NULL, res->screen, &position);
+    res->menu->clip_rect.x = 0;
+    res->menu->clip_rect.y = 0;
 
+    position.x = LOGS_POSITION_X;
+    position.y = LOGS_POSITION_Y;
+    res->logs = SDL_CreateRGBSurface(SDL_SWSURFACE, LOGS_WIDTH, LOGS_HEIGHT, SCREEN_BPP, 0, 0, 0, 0);
+    SDL_FillRect(res->logs, NULL, LOGS_COLOR);
+    SDL_BlitSurface(res->logs, NULL, res->screen, &position);
+    res->logs->clip_rect.x = position.x;
+    res->logs->clip_rect.y = position.y;
+
+    res->text = NULL;
 
     position.x = BOARD_POSITION_X;
     position.y = BOARD_POSITION_Y;
     res->board = IMG_Load("Images/hex.png");
     SDL_BlitSurface(res->board, NULL, res->screen, &position);
+    res->board->clip_rect.x = position.x;
+    res->board->clip_rect.y = position.y;
+
     res->buttonMenu = NULL;
     res->buttonPlay = NULL;
     res->buttonLoad = NULL;
@@ -91,6 +107,8 @@ void closeWindow (Window window) {
 	freeButtons(window);
     SDL_FreeSurface(window->menu);
     SDL_FreeSurface(window->board);
+    SDL_FreeSurface(window->logs);
+    if (window->text != NULL) SDL_FreeSurface(window->text);
 	SDL_Quit();
 	free(window);
 }
@@ -258,6 +276,58 @@ int isPosOnbutton (SDL_Surface* button, int x, int y) {
 		res = 1;
 	}
 	return res;
+}
+
+void displayToken (Hexagone hex, int i, Window window) {
+    SDL_Rect position;
+    position.x = hex->x + TOKEN_RELATIVE_HEXAGONE_POSITION_X;
+    position.y = hex->y + TOKEN_RELATIVE_HEXAGONE_POSITION_Y;
+    if (hex->token == NULL && hex->idPlayer == 0 && i == ID_PLAYER_1) {
+        hex->token = IMG_Load("Images/button-blue22.png");
+    } else if (hex->token == NULL && hex->idPlayer == 0 && i == ID_PLAYER_2) {
+        hex->token = IMG_Load("Images/button-red22.png");
+    }
+    SDL_BlitSurface(hex->token, NULL, window->screen, &position);
+}
+
+void erasedToken (Hexagone hex) {
+    SDL_FreeSurface(hex->token);
+    hex->token = NULL;
+}
+
+/*void logPlayerTurn(Hexagone hex, Window window, TTF_Font *police) {
+    SDL_Color color = {255,255,255};
+    SDL_Rect pos;
+    pos.x = LOGS_POSITION_X+3;
+    pos.y = LOGS_POSITION_Y+10;
+    if (window->text != NULL) SDL_FreeSurface(window->text);
+    window->text = TTF_RenderText_Blended(police, "test", color);
+    SDL_BlitSurface(window->text, NULL, window->screen, &pos);
+}*/
+
+void displayBoard (Board board, Window window) {
+    int i, j;
+    SDL_Rect position;
+    position.x = BOARD_POSITION_X;
+    position.y = BOARD_POSITION_Y;
+    SDL_BlitSurface(window->board, NULL, window->screen, &position);
+
+    for (i = 0; i < BOARD_LENGTH; i++) {
+        for (j = 0; j < BOARD_LENGTH; j++) {
+            if (board->board[i][j]->token != NULL && (board->board[i][j]->idPlayer > 0 || board->board[i][j]->hold)) {
+                //if (board->board[i][j]->token != NULL) erasedToken(board->board[i][j]); 
+                position.x = board->board[i][j]->x + TOKEN_RELATIVE_HEXAGONE_POSITION_X;
+                position.y = board->board[i][j]->y + TOKEN_RELATIVE_HEXAGONE_POSITION_Y;
+                SDL_BlitSurface(board->board[i][j]->token, NULL, window->screen, &position);
+            } else if (board->board[i][j]->token != NULL && (board->board[i][j]->idPlayer == 0 && !board->board[i][j]->hold)) {
+                if (board->board[i][j]->token != NULL) erasedToken(board->board[i][j]); 
+                board->board[i][j]->token = IMG_Load("Images/hex-vide.png");
+                position.x = board->board[i][j]->x;
+                position.y = board->board[i][j]->y;
+                SDL_BlitSurface(board->board[i][j]->token, NULL,window->screen,&position);
+            }
+        }
+    }
 }
 
 /*SDL_Surface* isPositionOnButton (Window window, int x, int y) {

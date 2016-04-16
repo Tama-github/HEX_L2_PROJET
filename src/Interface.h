@@ -90,6 +90,12 @@
 
 typedef struct s_Board* Board;
 
+typedef struct s_ImgHexagones {
+	SDL_Surface * emptyHex;
+	SDL_Surface * redHex;
+	SDL_Surface * blueHex;
+}* ImgHexagones;
+
 struct s_Window {
 	int menuType;
 
@@ -98,6 +104,7 @@ struct s_Window {
 	SDL_Surface * board;
 	SDL_Surface * logs;
 	SDL_Surface * text;
+	ImgHexagones hex;
 
 	/* tous les boutons */
 	SDL_Surface * buttonMenu;
@@ -112,8 +119,10 @@ struct s_Window {
 	SDL_Surface * buttonHxIA2;
 };
 
-typedef struct s_Window * Window;
 
+
+typedef struct s_Window * Window;
+typedef struct s_Game* Game;
 
 Window createWindow ();
 void closeWindow (Window window);
@@ -124,6 +133,6 @@ SDL_Surface* setImageForButton (Window window, SDL_Surface * button, char* image
 void refreshWindow(Window window);
 int isPosOnbutton (SDL_Surface* button, int x, int y);
 void displayToken (Hexagone hex, int i, Window window);
-void displayBoard (Board board, Window window);
+void displayBoard (Board board, Window window, Game game);
 
 #endif

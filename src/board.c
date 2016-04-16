@@ -39,11 +39,14 @@ Hexagone findHexagoneOnBoard (Board board, int x, int y) {
 	int i, j;
 	Hexagone res = NULL;
 	int find = 0;
-	for (i = 0; i < BOARD_LENGTH && !find; i++) {
-		for (j = 0; j < BOARD_LENGTH && !find; j++) {
+	for (i = 0; i < BOARD_LENGTH; i++) {
+		for (j = 0; j < BOARD_LENGTH; j++) {
 			if (isCoordOnHexagone(board->board[i][j], x, y) && !find) {
 				res = board->board[i][j];
 				find = 1;
+				board->board[i][j]->hold = 1;
+			} else {
+				board->board[i][j]->hold = 0;
 			}
 		}
 	}

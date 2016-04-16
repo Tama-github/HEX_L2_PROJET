@@ -122,12 +122,13 @@ int main (int argc, char * argv[]) {
                     }
                 } else if (isPosOnbutton(window->board, event.button.x, event.button.y) && game->gameStatus == GAME_IN_PROGRESS) {
                     if ((hex = findHexagoneOnBoard(game->board, event.button.x, event.button.y)) != NULL) {
-                       // displayToken(hex, game->turnOf, window);
+                        printf("%d\n", hex->hold);
+                        displayToken(hex, game->turnOf, window);
                     }
                 }
                 break;
         }
-        //displayBoard(game->board, window);
+        displayBoard(game->board, window, game);
         refreshWindow(window);
     }
 

@@ -14,7 +14,6 @@ struct et_hexagone{
   int x;
   int y;
   int hold;
-  SDL_Surface * token;
 };
 
 typedef struct et_hexagone* Hexagone;

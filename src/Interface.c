@@ -11,12 +11,25 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 
+ImgHexagones createImgHexagone () {
+    ImgHexagones res = (ImgHexagones)malloc(sizeof(struct s_ImgHexagones));
+    res->emptyHex = IMG_Load("Images/hex-vide.png");
+    res->redHex = IMG_Load("Images/button-red22.png");
+    res->blueHex = IMG_Load("Images/button-blue22.png");
+    return res;
+}
 
+void deleteImgHexagone (ImgHexagones i) {
+    SDL_FreeSurface(i->emptyHex);
+    SDL_FreeSurface(i->redHex);
+    SDL_FreeSurface(i->blueHex);
+    free(i);
+}
 
 Window createWindow () {
 	Window res = (Window)malloc(sizeof(struct s_Window));
 	res->screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE);
-    
+    res->hex = createImgHexagone();
     res->menuType = UNDIFINE_MENU;
 
 	SDL_Rect position;
@@ -96,6 +109,7 @@ void freeButtons (Window window) {
 	if (window->buttonHxIA2 != NULL)
     SDL_FreeSurface(window->buttonHxIA2);
     
+
     SDL_Rect pos;
     pos.x = 0;
     pos.y = 0;
@@ -105,6 +119,7 @@ void freeButtons (Window window) {
 void closeWindow (Window window) {
 
 	freeButtons(window);
+    deleteImgHexagone(window->hex);
     SDL_FreeSurface(window->menu);
     SDL_FreeSurface(window->board);
     SDL_FreeSurface(window->logs);
@@ -278,21 +293,19 @@ int isPosOnbutton (SDL_Surface* button, int x, int y) {
 	return res;
 }
 
-void displayToken (Hexagone hex, int i, Window window) {
+void displayToken (Hexagone hex, int idPlayer, Window window) {
     SDL_Rect position;
     position.x = hex->x + TOKEN_RELATIVE_HEXAGONE_POSITION_X;
     position.y = hex->y + TOKEN_RELATIVE_HEXAGONE_POSITION_Y;
-    if (hex->token == NULL && hex->idPlayer == 0 && i == ID_PLAYER_1) {
-        hex->token = IMG_Load("Images/button-blue22.png");
-    } else if (hex->token == NULL && hex->idPlayer == 0 && i == ID_PLAYER_2) {
-        hex->token = IMG_Load("Images/button-red22.png");
+    if (idPlayer == ID_PLAYER_1) {
+        SDL_BlitSurface(window->hex->blueHex, NULL, window->screen, &position);
+    } else if (idPlayer == ID_PLAYER_2) {
+        SDL_BlitSurface(window->hex->redHex, NULL, window->screen, &position);
+    } else if (idPlayer == UNPLAYED) {
+        position.x = hex->x;
+        position.y = hex->y;
+        SDL_BlitSurface(window->hex->emptyHex, NULL, window->screen, &position);
     }
-    SDL_BlitSurface(hex->token, NULL, window->screen, &position);
-}
-
-void erasedToken (Hexagone hex) {
-    SDL_FreeSurface(hex->token);
-    hex->token = NULL;
 }
 
 /*void logPlayerTurn(Hexagone hex, Window window, TTF_Font *police) {
@@ -305,7 +318,7 @@ void erasedToken (Hexagone hex) {
     SDL_BlitSurface(window->text, NULL, window->screen, &pos);
 }*/
 
-void displayBoard (Board board, Window window) {
+void displayBoard (Board board, Window window, Game game) {
     int i, j;
     SDL_Rect position;
     position.x = BOARD_POSITION_X;
@@ -314,17 +327,14 @@ void displayBoard (Board board, Window window) {
 
     for (i = 0; i < BOARD_LENGTH; i++) {
         for (j = 0; j < BOARD_LENGTH; j++) {
-            if (board->board[i][j]->token != NULL && (board->board[i][j]->idPlayer > 0 || board->board[i][j]->hold)) {
-                //if (board->board[i][j]->token != NULL) erasedToken(board->board[i][j]); 
-                position.x = board->board[i][j]->x + TOKEN_RELATIVE_HEXAGONE_POSITION_X;
-                position.y = board->board[i][j]->y + TOKEN_RELATIVE_HEXAGONE_POSITION_Y;
-                SDL_BlitSurface(board->board[i][j]->token, NULL, window->screen, &position);
-            } else if (board->board[i][j]->token != NULL && (board->board[i][j]->idPlayer == 0 && !board->board[i][j]->hold)) {
-                if (board->board[i][j]->token != NULL) erasedToken(board->board[i][j]); 
-                board->board[i][j]->token = IMG_Load("Images/hex-vide.png");
-                position.x = board->board[i][j]->x;
-                position.y = board->board[i][j]->y;
-                SDL_BlitSurface(board->board[i][j]->token, NULL,window->screen,&position);
+            if (board->board[i][j]->hold == 1) {
+                displayToken(board->board[i][j], game->turnOf, window);
+            } else if (board->board[i][j]->idPlayer == ID_PLAYER_1) {
+                displayToken(board->board[i][j], ID_PLAYER_1, window);
+            } else if (board->board[i][j]->idPlayer == ID_PLAYER_1) {
+                displayToken(board->board[i][j], ID_PLAYER_2, window);
+            } else {
+                displayToken(board->board[i][j], UNPLAYED, window);
             }
         }
     }

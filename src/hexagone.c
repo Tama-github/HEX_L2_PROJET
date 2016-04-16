@@ -15,15 +15,11 @@ Hexagone createHexagone (int x, int y) {
   h->x = x;
   h->y = y;
   h->idPlayer = 0;
-  h->token = NULL;
   h->hold = 0;
   return(h);
 }
 
 void deleteHexagone (Hexagone h) {
-  if (h->token != NULL) {
-    SDL_FreeSurface(h->token);
-  }
   free(h);
 }
 

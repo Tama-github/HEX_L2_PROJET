@@ -5,6 +5,7 @@
 #define GAME_IN_PROGRESS 1
 #define GAME_END 2
 
+#define UNPLAYED 0
 #define ID_PLAYER_1 1
 #define ID_PLAYER_2 2
 

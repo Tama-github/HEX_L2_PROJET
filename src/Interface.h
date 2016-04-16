@@ -7,6 +7,7 @@
 
 #include "board.h"
 #include "game.h"
+#include "queue.h"
 
 /* types de menu */
  #define UNDIFINE_MENU 0
@@ -25,9 +26,9 @@
 
 /* dimenssions et position des logs*/
 #define LOGS_WIDTH SCREEN_WIDTH/2
-#define LOGS_HEIGHT 45
+#define LOGS_HEIGHT 110
 #define LOGS_POSITION_X MENU_WIDTH + 10;
-#define LOGS_POSITION_Y SCREEN_HEIGHT - 60;
+#define LOGS_POSITION_Y SCREEN_HEIGHT - 125;
 
 /* dimenssion du plateau de jeu */
 #define BOARD_WIDTH 524
@@ -88,6 +89,9 @@
 #define TOKEN_RELATIVE_HEXAGONE_POSITION_X 4
 #define TOKEN_RELATIVE_HEXAGONE_POSITION_Y 4
 
+/* longueur maximum du text de log */
+#define QUEUE_MAX_SIZE 6
+
 typedef struct s_Board* Board;
 
 typedef struct s_ImgHexagones {
@@ -103,7 +107,8 @@ struct s_Window {
 	SDL_Surface * menu;
 	SDL_Surface * board;
 	SDL_Surface * logs;
-	SDL_Surface * text;
+	Queue textInLog;
+	SDL_Surface ** text;
 	ImgHexagones hex;
 
 	/* tous les boutons */
@@ -134,5 +139,8 @@ void refreshWindow(Window window);
 int isPosOnbutton (SDL_Surface* button, int x, int y);
 void displayToken (Hexagone hex, int i, Window window);
 void displayBoard (Board board, Window window, Game game);
+void logPlayerTurn(Hexagone hex, Game game, Queue qu);
+void displayLog (Window window, TTF_Font *police, Queue qu);
+void logBeginGame (Queue qu);
 
 #endif

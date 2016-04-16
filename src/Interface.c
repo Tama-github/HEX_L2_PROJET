@@ -5,6 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
+#include <assert.h>
 
 #include "Interface.h"
 
@@ -31,6 +32,7 @@ Window createWindow () {
 	res->screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE);
     res->hex = createImgHexagone();
     res->menuType = UNDIFINE_MENU;
+    res->textInLog = createQueue();
 
 	SDL_Rect position;
     position.x = 0;
@@ -64,7 +66,11 @@ Window createWindow () {
     res->logs->clip_rect.x = position.x;
     res->logs->clip_rect.y = position.y;
 
-    res->text = NULL;
+    res->text = (SDL_Surface**)malloc(sizeof(SDL_Surface*)*QUEUE_MAX_SIZE);
+    int i;
+    for (i = 0; i < QUEUE_MAX_SIZE; i++) {
+        res->text[i] = NULL;
+    }
 
     position.x = BOARD_POSITION_X;
     position.y = BOARD_POSITION_Y;
@@ -123,7 +129,11 @@ void closeWindow (Window window) {
     SDL_FreeSurface(window->menu);
     SDL_FreeSurface(window->board);
     SDL_FreeSurface(window->logs);
-    if (window->text != NULL) SDL_FreeSurface(window->text);
+    deleteQueue(window->textInLog);
+    int i;
+    for (i = 0; i < QUEUE_MAX_SIZE; i++) 
+        if (window->text[i] != NULL) SDL_FreeSurface(window->text[i]);
+    free(window->text);
 	SDL_Quit();
 	free(window);
 }
@@ -308,15 +318,53 @@ void displayToken (Hexagone hex, int idPlayer, Window window) {
     }
 }
 
-/*void logPlayerTurn(Hexagone hex, Window window, TTF_Font *police) {
+
+
+void displayLog (Window window, TTF_Font *police, Queue qu) {
+    if (emptyQ(qu)) return;
+
+    char** txt = getConcatChar(qu);
     SDL_Color color = {255,255,255};
     SDL_Rect pos;
-    pos.x = LOGS_POSITION_X+3;
-    pos.y = LOGS_POSITION_Y+10;
-    if (window->text != NULL) SDL_FreeSurface(window->text);
-    window->text = TTF_RenderText_Blended(police, "test", color);
-    SDL_BlitSurface(window->text, NULL, window->screen, &pos);
-}*/
+    pos.x = LOGS_POSITION_X;
+    pos.y = LOGS_POSITION_Y;
+    SDL_BlitSurface(window->logs, NULL, window->screen, &pos);
+    int i;
+    for (i = 0; i < getSize(qu); i++) {
+        if (window->text[i] != NULL) SDL_FreeSurface(window->text[i]);
+        window->text[i] = TTF_RenderText_Blended(police, txt[i], color);
+        assert(window->text[i] != NULL);
+        window->text[i]->clip_rect.x = pos.x;
+        window->text[i]->clip_rect.x = pos.y;
+        SDL_BlitSurface(window->text[i], NULL, window->screen, &pos);
+        pos.y = pos.y+17;
+    }
+}
+
+void logBeginGame (Queue qu) {
+    char* txt = (char*)malloc(sizeof(char)*50);
+    assert(txt != NULL);
+    txt[0] = '\0';
+    strcat(txt, "Debut de la partie, le joueur bleu commence.");
+    txt[44] = '\0';
+    enfiler(qu, txt);
+}
+
+void logPlayerTurn(Hexagone hex, Game game, Queue qu) {
+    char * txt = (char*)malloc(sizeof(char)*40);
+    txt[0]='\0';
+    if (game->turnOf == ID_PLAYER_1) {
+        strcat(txt, "C'est au joueur bleu de jouer.");
+        txt[30]='\0';
+    } else if (game->turnOf == ID_PLAYER_2) {
+        strcat(txt, "C'est au joueur rouge de jouer.");
+        txt[31]='\0';
+    }
+    enfiler(qu, txt);
+    if (getSize(qu) > QUEUE_MAX_SIZE) {
+        free(defiler(qu));
+    }
+}
 
 void displayBoard (Board board, Window window, Game game) {
     int i, j;
@@ -327,7 +375,7 @@ void displayBoard (Board board, Window window, Game game) {
 
     for (i = 0; i < BOARD_LENGTH; i++) {
         for (j = 0; j < BOARD_LENGTH; j++) {
-            if (board->board[i][j]->hold == 1) {
+            if (board->board[i][j]->hold == 1 && board->board[i][j]->idPlayer == UNPLAYED) {
                 displayToken(board->board[i][j], game->turnOf, window);
             } else if (board->board[i][j]->idPlayer == ID_PLAYER_1) {
                 displayToken(board->board[i][j], ID_PLAYER_1, window);

@@ -37,7 +37,7 @@ int main (int argc, char * argv[]) {
     atexit(SDL_Quit);
     
     /*initialisation de la police*/
-    police = TTF_OpenFont("Arial.ttf", 14);
+    police = TTF_OpenFont("police/arial.ttf", 14);
 
     /*
      * Initialisation de la fenêtre
@@ -83,6 +83,7 @@ int main (int argc, char * argv[]) {
                         } else if (isPosOnbutton(window->buttonHxH, event.button.x, event.button.y)) {
                             setUpGameHxH(game);
                             setInGameMenu(window);
+                            logBeginGame (window->textInLog);
                         } else if (isPosOnbutton(window->buttonHxIA2, event.button.x, event.button.y)) {
                             //event
                         } else if (isPosOnbutton(window->buttonHxIA1, event.button.x, event.button.y)) {
@@ -93,8 +94,10 @@ int main (int argc, char * argv[]) {
                         if ((hex = findHexagoneOnBoard(game->board, event.button.x, event.button.y)) != NULL && hex->idPlayer == 0) {
                             displayToken(hex, game->turnOf, window);
                             playAnHexagone(hex, game);
+                            logPlayerTurn(hex, game, window->textInLog);
                         }
                     }
+                    displayLog (window, police, window->textInLog);
                 }
                 break;
             case SDL_MOUSEMOTION:
@@ -127,6 +130,7 @@ int main (int argc, char * argv[]) {
                 }
                 break;
         }
+        
         displayBoard(game->board, window, game);
         refreshWindow(window);
     }

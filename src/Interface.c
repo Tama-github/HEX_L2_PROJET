@@ -331,7 +331,7 @@ void displayBoard (Board board, Window window, Game game) {
                 displayToken(board->board[i][j], game->turnOf, window);
             } else if (board->board[i][j]->idPlayer == ID_PLAYER_1) {
                 displayToken(board->board[i][j], ID_PLAYER_1, window);
-            } else if (board->board[i][j]->idPlayer == ID_PLAYER_1) {
+            } else if (board->board[i][j]->idPlayer == ID_PLAYER_2) {
                 displayToken(board->board[i][j], ID_PLAYER_2, window);
             } else {
                 displayToken(board->board[i][j], UNPLAYED, window);

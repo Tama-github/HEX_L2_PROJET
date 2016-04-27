@@ -23,10 +23,14 @@ struct s_Game {
 typedef struct s_Game* Game;
 
 Game createGame ();
+void deleteGame (Game game);
 void setUpGameHxH (Game game);
 void nextTurn (Game game);
 void playAnHexagone (Hexagone hex, Game game);
 void storeAPlay (Game game, Hexagone hex);
 int undoAction (Game game);
+void endGame (Game game);
+void saveGame (Game game);
+int loadGame (Game game);
 
 #endif

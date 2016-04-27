@@ -5,6 +5,9 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include "game.h"
 
@@ -53,5 +56,43 @@ int undoAction (Game game) {
 	return 0;
 }
 
+void endGame (Game game) {
+	deleteGame(game);
+	game = createGame();
+}
 
+void saveGame (Game game) {
+	FILE* f_out = fopen("saves/save.txt", "w");
+	if (f_out == NULL) {
+		fprintf(stderr, "problème d'ouverture du fichier\n");
+		exit(1);
+	}
+	fprintf(f_out,"%d\n", game->turnOf);
+	int i, j;
+	for (i = 0; i < BOARD_LENGTH; i++) {
+		for (j = 0; j < BOARD_LENGTH; j++) {
+			if (game->board->board[i][j]->idPlayer != UNPLAYED) {
+				fprintf(f_out, "%d %d %d %d %d\n", game->board->board[i][j]->idPlayer, i, j, game->board->board[i][j]->x, game->board->board[i][j]->y);
+			}
+		}
+	}
+	fclose(f_out);
+}
 
+int loadGame (Game game) {
+	FILE* f_in = fopen("saves/save.txt", "r");
+	if (f_in == NULL) {
+		return 0;
+	}
+	int idPlayer, i, j, x, y;
+	fscanf(f_in, "%d", &idPlayer);
+	game->turnOf = idPlayer;
+
+	while (fscanf(f_in,"%d %d %d %d %d", &idPlayer, &i, &j, &x, &y) != EOF) {
+		game->board->board[i][j]->x = x;
+		game->board->board[i][j]->y = y;
+		game->board->board[i][j]->idPlayer = idPlayer;
+	}
+
+	return 1;
+}

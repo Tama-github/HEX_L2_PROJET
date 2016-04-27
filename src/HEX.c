@@ -22,6 +22,9 @@ int main (int argc, char * argv[]) {
     Hexagone hex;
     game = createGame();
     int i, j;
+    int confirmQ = 0;
+    int confirmM = 0;
+    int confirmS = 0;
 
 	int stop = 0;
 	SDL_Event event;
@@ -37,17 +40,17 @@ int main (int argc, char * argv[]) {
     /* Clean up on exit */
     atexit(SDL_Quit);
     
-    /*initialisation de la police*/
+    /*initialisation of the font*/
     police = TTF_OpenFont("police/arial.ttf", 14);
 
     /*
-     * Initialisation de la fenêtre
+     * Initialisation of the window
      */
     window = createWindow ();
     setInitMenu(window);
     refreshWindow(window);
 
-    /* Gestion des evenements */
+    /* Manage of events */
     SDL_EnableKeyRepeat(10,10);
     while(!stop){
         if (window->menuType == INIT_MENU) {
@@ -65,26 +68,49 @@ int main (int argc, char * argv[]) {
             case SDL_MOUSEBUTTONUP:
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     printf("CLICK : x:%d  y:%d\n", event.button.x, event.button.y);
-                    /* Gestion des clic menu */
+                    /* Manage on menu's clic */
                     if (isPosOnbutton(window->menu, event.button.x, event.button.y)) {
                         if (isPosOnbutton(window->buttonMenu, event.button.x, event.button.y)) {
-                            setInitMenu(window);
+                            if (game->gameStatus == GAME_IN_PROGRESS && confirmM == 0) {
+                                confirmM = 1;
+                                logSomething(window->textInLog, "Cliquer une seconde fois sur le bouton menu si vous voulez vraiment retourner sur le menu.\0");
+                            } else if (game->gameStatus == GAME_IN_PROGRESS && confirmM == 1) {
+                                setInitMenu(window);
+                                //endGame(game);
+                            } else
+                                setInitMenu(window);
                         } else if (isPosOnbutton(window->buttonPlay, event.button.x, event.button.y)) {
                             setGameChoiceMenu(window);
                         } else if (isPosOnbutton(window->buttonLoad, event.button.x, event.button.y)) {
-                            //event
+                            if(loadGame(game)) {
+                                logSomething(window->textInLog, "La partie à bien ete charge.\0");
+                                setUpGameHxH(game);
+                                setInGameMenu(window);
+                            } else {
+                            }
                         } else if (isPosOnbutton(window->buttonSave, event.button.x, event.button.y)) {
-                            //event
+                            if (confirmS) {
+                                saveGame(game);
+                                logSomething(window->textInLog, "La partie a ete sauvegarde.\0");
+                            } else {
+                                confirmS = 1;
+                                logSomething(window->textInLog, "Si vous sauvegarder, vous ecraserez la sauvegarde existante.\0");
+                                logSomething(window->textInLog, "Cliquez une seconde fois sur le bouton sauvegarder pour confirmer la sauvegarde.\0");
+                            }
                         } else if (isPosOnbutton(window->buttonUndo, event.button.x, event.button.y)) {
                             if (undoAction(game))
                                 logSomething(window->textInLog, "Les deux derniers coups ont ete annule.\0");
                             else
-                                logSomething(window->textInLog, "Vous ne pouvez pas annuler deux fois consecutivement. On en debut de partie\0");
-
+                                logSomething(window->textInLog, "Vous ne pouvez pas annuler deux fois consecutivement. Ou en debut de partie\0");
                         } else if (isPosOnbutton(window->buttonHistoric, event.button.x, event.button.y)) {
-                            //event
+                            /* This button is depreciat */
                         } else if (isPosOnbutton(window->buttonQuit, event.button.x, event.button.y)) {
-                            stop = 1;
+                            if (confirmQ) 
+                                stop = 1;
+                            else {
+                                confirmQ = 1;
+                                logSomething(window->textInLog, "Cliquer une seconde fois sur le bouton quitter si vous voulez vraiment quitter le jeu.\0");
+                            }
                         } else if (isPosOnbutton(window->buttonHxH, event.button.x, event.button.y)) {
                             setUpGameHxH(game);
                             setInGameMenu(window);
@@ -94,7 +120,7 @@ int main (int argc, char * argv[]) {
                         } else if (isPosOnbutton(window->buttonHxIA1, event.button.x, event.button.y)) {
                             //event
                         }
-                    /* Gestion des clic plateau */
+                    /* Manage on board's clic */
                     } else if (isPosOnbutton(window->board, event.button.x, event.button.y) && game->gameStatus == GAME_IN_PROGRESS) {
                         if ((hex = findHexagoneOnBoard(game->board, event.button.x, event.button.y, &i, &j)) != NULL && hex->idPlayer == 0) {
                             displayToken(hex, game->turnOf, window);
@@ -103,6 +129,18 @@ int main (int argc, char * argv[]) {
                             storeAPlay(game, hex);
                         }
                     }
+
+                    /* Manage on critical actions */
+                    if (!isPosOnbutton(window->buttonQuit, event.button.x, event.button.y)) {
+                        confirmQ = 0;
+                    } 
+                    if (!isPosOnbutton(window->buttonMenu, event.button.x, event.button.y)) {
+                        confirmM = 0;
+                    }
+                    if (!isPosOnbutton(window->buttonSave, event.button.x, event.button.y)) {
+                        confirmS = 0;
+                    }
+
                     displayLog (window, police, window->textInLog);
                 }
                 break;
@@ -140,7 +178,7 @@ int main (int argc, char * argv[]) {
         displayBoard(game->board, window, game);
         refreshWindow(window);
     }
-
+    //deleteGame(game);
     closeWindow(window);
 	return 0;
 }

@@ -35,8 +35,8 @@ void deleteBoard (Board b) {
 	free(b);
 }
 
-Hexagone findHexagoneOnBoard (Board board, int x, int y) {
-	int i, j;
+Hexagone findHexagoneOnBoard (Board board, int x, int y, int *v, int *w) {
+	int i,j;
 	Hexagone res = NULL;
 	int find = 0;
 	for (i = 0; i < BOARD_LENGTH; i++) {
@@ -45,6 +45,8 @@ Hexagone findHexagoneOnBoard (Board board, int x, int y) {
 				res = board->board[i][j];
 				find = 1;
 				board->board[i][j]->hold = 1;
+				*v=i+1;
+				*w=j+1;
 			} else {
 				board->board[i][j]->hold = 0;
 			}

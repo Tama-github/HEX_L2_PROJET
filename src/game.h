@@ -16,6 +16,7 @@ typedef struct s_Board* Board;
 struct s_Game {
 	int gameStatus;
 	int turnOf;
+	Hexagone twoLastPlay [2];
 	Board board;
 };
 
@@ -25,5 +26,7 @@ Game createGame ();
 void setUpGameHxH (Game game);
 void nextTurn (Game game);
 void playAnHexagone (Hexagone hex, Game game);
+void storeAPlay (Game game, Hexagone hex);
+int undoAction (Game game);
 
 #endif

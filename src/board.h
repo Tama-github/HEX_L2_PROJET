@@ -21,6 +21,6 @@ typedef struct s_Board* Board;
 
 Board createBoard ();
 void deleteBoard (Board b);
-Hexagone findHexagoneOnBoard (Board board, int x, int y);
+Hexagone findHexagoneOnBoard (Board board, int x, int y, int *i, int *j);
 
 #endif

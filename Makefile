@@ -20,4 +20,4 @@ obj/queue.o: src/queue.c
 		gcc -c src/queue.c -o obj/queue.o -Wall -g -ggdb -O0
 
 clean:
-		rm -f obj/*.o
+		rm -f obj/*.o HEX

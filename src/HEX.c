@@ -21,6 +21,7 @@ int main (int argc, char * argv[]) {
     Game game;
     Hexagone hex;
     game = createGame();
+    int i, j;
 
 	int stop = 0;
 	SDL_Event event;
@@ -75,7 +76,11 @@ int main (int argc, char * argv[]) {
                         } else if (isPosOnbutton(window->buttonSave, event.button.x, event.button.y)) {
                             //event
                         } else if (isPosOnbutton(window->buttonUndo, event.button.x, event.button.y)) {
-                            //event
+                            if (undoAction(game))
+                                logSomething(window->textInLog, "Les deux derniers coups ont ete annule.\0");
+                            else
+                                logSomething(window->textInLog, "Vous ne pouvez pas annuler deux fois consecutivement. On en debut de partie\0");
+
                         } else if (isPosOnbutton(window->buttonHistoric, event.button.x, event.button.y)) {
                             //event
                         } else if (isPosOnbutton(window->buttonQuit, event.button.x, event.button.y)) {
@@ -91,10 +96,11 @@ int main (int argc, char * argv[]) {
                         }
                     /* Gestion des clic plateau */
                     } else if (isPosOnbutton(window->board, event.button.x, event.button.y) && game->gameStatus == GAME_IN_PROGRESS) {
-                        if ((hex = findHexagoneOnBoard(game->board, event.button.x, event.button.y)) != NULL && hex->idPlayer == 0) {
+                        if ((hex = findHexagoneOnBoard(game->board, event.button.x, event.button.y, &i, &j)) != NULL && hex->idPlayer == 0) {
                             displayToken(hex, game->turnOf, window);
                             playAnHexagone(hex, game);
-                            logPlayerTurn(hex, game, window->textInLog);
+                            logPlayerTurn(hex, game, window->textInLog, i, j);
+                            storeAPlay(game, hex);
                         }
                     }
                     displayLog (window, police, window->textInLog);
@@ -124,7 +130,7 @@ int main (int argc, char * argv[]) {
                         window->buttonHxIA1 = setImageForButton(window, window->buttonHxIA1, "Images/Bouton-hxia1-hover.jpg");
                     }
                 } else if (isPosOnbutton(window->board, event.button.x, event.button.y) && game->gameStatus == GAME_IN_PROGRESS) {
-                    if ((hex = findHexagoneOnBoard(game->board, event.button.x, event.button.y)) != NULL) {
+                    if ((hex = findHexagoneOnBoard(game->board, event.button.x, event.button.y, &i, &j)) != NULL) {
                         displayToken(hex, game->turnOf, window);
                     }
                 }

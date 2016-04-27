@@ -14,6 +14,8 @@ Game createGame () {
 	Game game = (Game)malloc(sizeof(struct s_Game*));
 	game->gameStatus = GAME_UNSET;
 	game->board = createBoard();
+	game->twoLastPlay[0] = NULL;
+	game->twoLastPlay[1] = NULL;
 	return game;
 }
 
@@ -36,6 +38,20 @@ void playAnHexagone (Hexagone hex, Game game) {
 	nextTurn(game);
 }
 
+void storeAPlay (Game game, Hexagone hex) {
+	game->twoLastPlay[game->turnOf%2] = hex;
+}
+
+int undoAction (Game game) {
+	if (game->twoLastPlay[0] != NULL && game->twoLastPlay[1] != NULL) {
+		game->twoLastPlay[0]->idPlayer = 0;
+		game->twoLastPlay[1]->idPlayer = 0;
+		game->twoLastPlay[0] = NULL;
+		game->twoLastPlay[1] = NULL;
+		return 1;
+	}
+	return 0;
+}
 
 
 

@@ -143,11 +143,6 @@ void setInitMenu (Window window) {
 	window->menuType = INIT_MENU;
 	SDL_Rect position;
 	position.x = BUTTON_POSITION_X;
-    position.y = BUTTON_MENU_1_POSITION_Y;
-    window->buttonMenu = IMG_Load("Images/Bouton-menu-normal.jpg");
-    SDL_BlitSurface(window->buttonMenu, NULL, window->screen, &position);
-    window->buttonMenu->clip_rect.x = position.x;
-    window->buttonMenu->clip_rect.y = position.y;
 
     position.y = BUTTON_PLAY_1_POSITION_Y;
     window->buttonPlay = IMG_Load("Images/Bouton-jouer-normal.jpg");
@@ -167,6 +162,7 @@ void setInitMenu (Window window) {
     window->buttonQuit->clip_rect.x = position.x;
     window->buttonQuit->clip_rect.y = position.y;
 
+    window->buttonMenu = NULL;
     window->buttonSave = NULL;
     window->buttonUndo = NULL;
     window->buttonHistoric = NULL;
@@ -204,18 +200,13 @@ void setGameChoiceMenu (Window window) {
     window->buttonHxIA2->clip_rect.x = position.x;
     window->buttonHxIA2->clip_rect.y = position.y;
 
-    position.y = BUTTON_UNDO_MENU_2_POSITION_Y;
-    window->buttonUndo = IMG_Load("Images/Bouton-annuler-normal.jpg");
-    SDL_BlitSurface(window->buttonUndo, NULL, window->screen, &position);
-    window->buttonUndo->clip_rect.x = position.x;
-    window->buttonUndo->clip_rect.y = position.y;
-
     position.y = BUTTON_QUIT_MENU_2_POSITION_Y;
     window->buttonQuit = IMG_Load("Images/Bouton-quiter-normal.jpg");
     SDL_BlitSurface(window->buttonQuit, NULL, window->screen, &position);
     window->buttonQuit->clip_rect.x = position.x;
     window->buttonQuit->clip_rect.y = position.y;
 
+    window->buttonUndo = NULL;
     window->buttonPlay = NULL;
     window->buttonLoad = NULL;
     window->buttonSave = NULL;
@@ -233,12 +224,6 @@ void setInGameMenu (Window window) {
     window->buttonMenu->clip_rect.x = position.x;
     window->buttonMenu->clip_rect.y = position.y;
 
-    position.y = BUTTON_PLAY_3_POSITION_Y;
-    window->buttonPlay = IMG_Load("Images/Bouton-jouer-normal.jpg");
-    SDL_BlitSurface(window->buttonPlay, NULL, window->screen, &position);
-    window->buttonPlay->clip_rect.x = position.x;
-    window->buttonPlay->clip_rect.y = position.y;
-
     position.y = BUTTON_SAVE_POSITION_Y;
     window->buttonSave = IMG_Load("Images/Bouton-sauver-normal.jpg");
     SDL_BlitSurface(window->buttonSave, NULL, window->screen, &position);
@@ -250,12 +235,6 @@ void setInGameMenu (Window window) {
     SDL_BlitSurface(window->buttonLoad, NULL, window->screen, &position);
     window->buttonLoad->clip_rect.x = position.x;
     window->buttonLoad->clip_rect.y = position.y;
-
-    position.y = BUTTON_HISTORIC_POSITION_Y;
-    window->buttonHistoric = IMG_Load("Images/Bouton-historique-normal.jpg");
-    SDL_BlitSurface(window->buttonHistoric, NULL, window->screen, &position);
-    window->buttonHistoric->clip_rect.x = position.x;
-    window->buttonHistoric->clip_rect.y = position.y;
 
     position.y = BUTTON_UNDO_MENU_3_POSITION_Y;
     window->buttonUndo = IMG_Load("Images/Bouton-annuler-normal.jpg");
@@ -269,6 +248,8 @@ void setInGameMenu (Window window) {
     window->buttonQuit->clip_rect.x = position.x;
     window->buttonQuit->clip_rect.y = position.y;
 
+    window->buttonPlay = NULL;
+    window->buttonHistoric = NULL;
     window->buttonHxH = NULL;
     window->buttonHxIA1 = NULL;
     window->buttonHxIA2 = NULL;
@@ -330,7 +311,7 @@ void displayLog (Window window, TTF_Font *police, Queue qu) {
     pos.y = LOGS_POSITION_Y;
     SDL_BlitSurface(window->logs, NULL, window->screen, &pos);
     int i;
-    for (i = 0; i < getSize(qu); i++) {
+    for (i = 0; i < getSize(qu) && i < QUEUE_MAX_SIZE; i++) {
         if (window->text[i] != NULL) SDL_FreeSurface(window->text[i]);
         window->text[i] = TTF_RenderText_Blended(police, txt[i], color);
         assert(window->text[i] != NULL);
@@ -350,17 +331,27 @@ void logBeginGame (Queue qu) {
     enfiler(qu, txt);
 }
 
-void logPlayerTurn(Hexagone hex, Game game, Queue qu) {
-    char * txt = (char*)malloc(sizeof(char)*40);
+void logPlayerTurn(Hexagone hex, Game game, Queue qu, int i, int j) {
+    char * txt = (char*)malloc(sizeof(char)*150);
     txt[0]='\0';
     if (game->turnOf == ID_PLAYER_1) {
-        strcat(txt, "C'est au joueur bleu de jouer.");
-        txt[30]='\0';
+        sprintf(txt, "Le Joueur rouge a jouer en (%d, %d) .C'est au joueur bleu de jouer.", i, j);
     } else if (game->turnOf == ID_PLAYER_2) {
-        strcat(txt, "C'est au joueur rouge de jouer.");
-        txt[31]='\0';
+        sprintf(txt, "Le Joueur bleu a jouer en (%d, %d) .C'est au joueur rouge de jouer.", i, j);
     }
     enfiler(qu, txt);
+    if (getSize(qu) > QUEUE_MAX_SIZE) {
+        free(defiler(qu));
+    }
+}
+
+void logSomething (Queue qu, char* c) {
+    char * txt = (char*)malloc(sizeof(char)*150);
+    txt[0] = '\0';
+    if (strlen(c) < 150) {
+        strcat(txt, c);
+        enfiler(qu, txt);
+    }
     if (getSize(qu) > QUEUE_MAX_SIZE) {
         free(defiler(qu));
     }

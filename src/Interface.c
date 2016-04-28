@@ -352,7 +352,7 @@ void logSomething (Queue qu, char* c) {
         strcat(txt, c);
         enfiler(qu, txt);
     }
-    if (getSize(qu) > QUEUE_MAX_SIZE) {
+    while (getSize(qu) > QUEUE_MAX_SIZE) {
         free(defiler(qu));
     }
 }

@@ -32,5 +32,6 @@ int undoAction (Game game);
 void endGame (Game game);
 void saveGame (Game game);
 int loadGame (Game game);
+void reinitializeGame (Game game);
 
 #endif

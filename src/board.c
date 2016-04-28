@@ -11,6 +11,7 @@
 
 Board createBoard () {
 	Board b = (Board)malloc(sizeof(struct s_Board));
+	if (b == NULL) exit (2);
 	int i, j;
 	int x = FIRST_HEXAGONE_POSITION_X;
 	int y = FIRST_HEXAGONE_POSITION_Y;
@@ -32,6 +33,7 @@ void deleteBoard (Board b) {
 			deleteHexagone(b->board[i][j]);
 		}
 	}
+	b = (Board)realloc(b, sizeof(struct s_Board));
 	free(b);
 }
 
@@ -53,4 +55,13 @@ Hexagone findHexagoneOnBoard (Board board, int x, int y, int *v, int *w) {
 		}
 	}
 	return res;
+}
+
+void reinitializeBoard (Board b) {
+	int i, j;
+	for (i = 0; i < BOARD_LENGTH; i++) {
+		for (j = 0; j < BOARD_LENGTH; j++) {
+			b->board[i][j]->idPlayer = UNPLAYED;
+		}
+	}
 }

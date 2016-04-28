@@ -15,6 +15,7 @@
 
 Game createGame () {
 	Game game = (Game)malloc(sizeof(struct s_Game*));
+	if (game == NULL) exit (2);
 	game->gameStatus = GAME_UNSET;
 	game->board = createBoard();
 	game->twoLastPlay[0] = NULL;
@@ -59,6 +60,13 @@ int undoAction (Game game) {
 void endGame (Game game) {
 	deleteGame(game);
 	game = createGame();
+}
+
+void reinitializeGame (Game game) {
+	game->gameStatus = GAME_UNSET;
+	game->twoLastPlay[0] = NULL;
+	game->twoLastPlay[1] = NULL;
+	reinitializeBoard(game->board);
 }
 
 void saveGame (Game game) {

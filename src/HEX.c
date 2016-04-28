@@ -25,6 +25,8 @@ int main (int argc, char * argv[]) {
     int confirmQ = 0;
     int confirmM = 0;
     int confirmS = 0;
+    int confirmL = 0;
+    int err;
 
 	int stop = 0;
 	SDL_Event event;
@@ -76,18 +78,26 @@ int main (int argc, char * argv[]) {
                                 logSomething(window->textInLog, "Cliquer une seconde fois sur le bouton menu si vous voulez vraiment retourner sur le menu.\0");
                             } else if (game->gameStatus == GAME_IN_PROGRESS && confirmM == 1) {
                                 setInitMenu(window);
-                                //endGame(game);
+                                reinitializeGame (game);
                             } else
                                 setInitMenu(window);
                         } else if (isPosOnbutton(window->buttonPlay, event.button.x, event.button.y)) {
                             setGameChoiceMenu(window);
                         } else if (isPosOnbutton(window->buttonLoad, event.button.x, event.button.y)) {
-                            if(loadGame(game)) {
-                                logSomething(window->textInLog, "La partie à bien ete charge.\0");
-                                setUpGameHxH(game);
-                                setInGameMenu(window);
-                            } else {
-                            }
+                            if ((confirmL && game->gameStatus == GAME_IN_PROGRESS) || game->gameStatus != GAME_IN_PROGRESS) {
+                                err = loadGame(game);
+                                if (err == 1) {
+                                    logSomething(window->textInLog, "La partie a bien ete charge.\0");
+                                    setUpGameHxH(game);
+                                    setInGameMenu(window);
+                                } else if (err == 0) {
+                                    logSomething(window->textInLog, "Aucune sauvegarde disponible.");
+                                }
+                            } else if (game->gameStatus == GAME_IN_PROGRESS){
+                                confirmL = 1;
+                                logSomething(window->textInLog, "Si vous chargez une partie en jeu, votre progression sera perdu.\0");
+                                logSomething(window->textInLog, "Cliquez une seconde fois sur charger pour valider votre choix.\0");
+                            } 
                         } else if (isPosOnbutton(window->buttonSave, event.button.x, event.button.y)) {
                             if (confirmS) {
                                 saveGame(game);
@@ -174,7 +184,6 @@ int main (int argc, char * argv[]) {
                 }
                 break;
         }
-        
         displayBoard(game->board, window, game);
         refreshWindow(window);
     }

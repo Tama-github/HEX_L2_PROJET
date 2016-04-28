@@ -226,7 +226,7 @@ Affiche l'ensemble du log.
 void displayLog (Window window, TTF_Font *police, Queue qu);
 
 /****************************************************
-Affiche le début d'une partie.
+Affiche le début d'une partie dans le log.
 @entré qu : La file de text contenant le log.
 
 ******************************************************/

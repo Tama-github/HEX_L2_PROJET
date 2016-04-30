@@ -21,6 +21,7 @@ int main (int argc, char * argv[]) {
     Game game;
     Hexagone hex;
     game = createGame();
+    printf("%p\n",game->board->board);
     int i, j;
     int confirmQ = 0;
     int confirmM = 0;
@@ -85,6 +86,7 @@ int main (int argc, char * argv[]) {
                             setGameChoiceMenu(window);
                         } else if (isPosOnbutton(window->buttonLoad, event.button.x, event.button.y)) {
                             if ((confirmL && game->gameStatus == GAME_IN_PROGRESS) || game->gameStatus != GAME_IN_PROGRESS) {
+                                reinitializeGame(game);
                                 err = loadGame(game);
                                 if (err == 1) {
                                     logSomething(window->textInLog, "La partie a bien ete charge.\0");
@@ -135,8 +137,17 @@ int main (int argc, char * argv[]) {
                         if ((hex = findHexagoneOnBoard(game->board, event.button.x, event.button.y, &i, &j)) != NULL && hex->idPlayer == 0) {
                             displayToken(hex, game->turnOf, window);
                             playAnHexagone(hex, game);
-                            logPlayerTurn(hex, game, window->textInLog, i, j);
-                            storeAPlay(game, hex);
+                            if (haveVictorySet(game)) {
+                                if (game->turnOf == ID_PLAYER_1)
+                                    logSomething(window->textInLog, "Fin de partie, le joueur rouge a gagne.\0");
+                                else if (game->turnOf == ID_PLAYER_2)
+                                    logSomething(window->textInLog, "Fin de partie, le joueur bleu a gagne.\0");
+                                game->gameStatus = GAME_END;
+                                setInitMenu(window);
+                            } else {
+                                logPlayerTurn(hex, game, window->textInLog, i, j);
+                                storeAPlay(game, hex);
+                            }
                         }
                     }
 
@@ -184,7 +195,7 @@ int main (int argc, char * argv[]) {
                 }
                 break;
         }
-        displayBoard(game->board, window, game);
+        displayBoard(game, window);
         refreshWindow(window);
     }
     //deleteGame(game);

@@ -357,7 +357,7 @@ void logSomething (Queue qu, char* c) {
     }
 }
 
-void displayBoard (Board board, Window window, Game game) {
+void displayBoard (Game game, Window window) {
     int i, j;
     SDL_Rect position;
     position.x = BOARD_POSITION_X;
@@ -366,14 +366,14 @@ void displayBoard (Board board, Window window, Game game) {
 
     for (i = 0; i < BOARD_LENGTH; i++) {
         for (j = 0; j < BOARD_LENGTH; j++) {
-            if (board->board[i][j]->hold == 1 && board->board[i][j]->idPlayer == UNPLAYED) {
-                displayToken(board->board[i][j], game->turnOf, window);
-            } else if (board->board[i][j]->idPlayer == ID_PLAYER_1) {
-                displayToken(board->board[i][j], ID_PLAYER_1, window);
-            } else if (board->board[i][j]->idPlayer == ID_PLAYER_2) {
-                displayToken(board->board[i][j], ID_PLAYER_2, window);
+            if (game->board->board[i][j]->hold == 1 && game->board->board[i][j]->idPlayer == UNPLAYED) {
+                displayToken(game->board->board[i][j], game->turnOf, window);
+            } else if (game->board->board[i][j]->idPlayer == ID_PLAYER_1) {
+                displayToken(game->board->board[i][j], ID_PLAYER_1, window);
+            } else if (game->board->board[i][j]->idPlayer == ID_PLAYER_2) {
+                displayToken(game->board->board[i][j], ID_PLAYER_2, window);
             } else {
-                displayToken(board->board[i][j], UNPLAYED, window);
+                displayToken(game->board->board[i][j], UNPLAYED, window);
             }
         }
     }

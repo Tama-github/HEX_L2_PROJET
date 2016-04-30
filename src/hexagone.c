@@ -41,17 +41,52 @@ int isCoordOnHexagone (Hexagone h, int x, int y) {
 }
 
 int isAdjacentHexagone (Hexagone h, Hexagone i) {
-  if (h->x == i->x)
-    return(i->y == h->y-1 || i->y == h->y+1);
+  if (h == i)
+    return 0;
   
   if (h->y == i->y)
-    return(i->x == h->x-1 || i->x == h->x+1);
+    return(i->x == h->x-HEXAGONE_LENGTH || i->x == h->x+HEXAGONE_LENGTH);
 
-  if (h->y == i->y-1)
-    return(h->x == i->x-1);
-  
-  if (h->y == i->y+1)
-    return(h->x == i->x+1);
+  if (h->y == i->y - BOARD_EACH_COLUMN_SHIFT || h->y == i->y + BOARD_EACH_COLUMN_SHIFT) {
+    return(h->x == (i->x-BOARD_EACH_LINE_SHIFT) || h->x == (i->x + BOARD_EACH_LINE_SHIFT));
+  }
 
   return(0);
 }
+
+
+int isHexOnSide1 (Hexagone hex) {
+  if (hex->idPlayer == ID_PLAYER_2) {
+    if (hex->y == FIRST_HEXAGONE_POSITION_Y) 
+      return 1;
+  } else if (hex->idPlayer == ID_PLAYER_1) {
+    int i;
+    int res = 0;
+    for (i = 0; i < BOARD_LENGTH && !res; i++) {
+      if (hex->y == FIRST_HEXAGONE_POSITION_Y + i * BOARD_EACH_COLUMN_SHIFT) {
+        res = (hex->x == FIRST_HEXAGONE_POSITION_X + i * BOARD_EACH_LINE_SHIFT);
+      }
+    }
+    return res;
+  }
+
+  return 0;
+}
+
+int isHexOnSide2 (Hexagone hex) {
+  if (hex->idPlayer == ID_PLAYER_2) {
+    if (hex->y == LAST_HEXAGONE_POSITION_Y)
+      return 1;
+  } else if (hex->idPlayer == ID_PLAYER_1) {
+    int i;
+    int res = 0;
+    for (i = 0; i < BOARD_LENGTH && !res; i++) {
+      if (hex->y == FIRST_HEXAGONE_POSITION_Y + i * BOARD_EACH_COLUMN_SHIFT) {
+        res = (hex->x == LAST_HEXAGONE_POSITION_X + i * BOARD_EACH_LINE_SHIFT);
+      }
+    }
+    return res;
+  }
+  return 0;
+}
+

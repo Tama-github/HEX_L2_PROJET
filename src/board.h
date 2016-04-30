@@ -3,15 +3,7 @@
 
 #include "hexagone.h"
 #include "Interface.h"
-
-#define BOARD_LENGTH 11
-
-#define FIRST_HEXAGONE_POSITION_X (BOARD_POSITION_X + 19)
-#define FIRST_HEXAGONE_POSITION_Y (BOARD_POSITION_Y + 19)
-#define HEXAGONE_LENGTH 30
-#define HEXAGONE_HEIGHT 29
-#define BOARD_EACH_LINE_SHIFT 15
-#define BOARD_EACH_COLUMN_SHIFT 25
+#include "constantes.h"
 
 struct s_Board {
 	Hexagone board [BOARD_LENGTH][BOARD_LENGTH];

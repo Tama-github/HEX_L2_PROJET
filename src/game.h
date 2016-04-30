@@ -1,23 +1,21 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#define GAME_UNSET 0
-#define GAME_IN_PROGRESS 1
-#define GAME_END 2
-
-#define UNPLAYED 0
-#define ID_PLAYER_1 1
-#define ID_PLAYER_2 2
+#include "constantes.h"
 
 #include "board.h"
+#include "set.h"
 
 typedef struct s_Board* Board;
+typedef struct et_CellVictory CellVictory;
+typedef struct et_Victory* Victory;
 
 struct s_Game {
 	int gameStatus;
 	int turnOf;
 	Hexagone twoLastPlay [2];
 	Board board;
+	Victory victory;
 };
 
 typedef struct s_Game* Game;
@@ -33,5 +31,6 @@ void endGame (Game game);
 void saveGame (Game game);
 int loadGame (Game game);
 void reinitializeGame (Game game);
+int haveVictorySet (Game game);
 
 #endif

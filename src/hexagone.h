@@ -4,6 +4,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 
+#include "constantes.h"
 
 struct et_hexagone{
   int idPlayer; /* id du joueur qui a joue l'hexagone*/
@@ -52,7 +53,9 @@ sur la surface de l'hexagone passé en paramettre.
 ******************************************************/
 int isCoordOnHexagone (Hexagone h, int x, int y);
 
+int isHexOnSide1 (Hexagone hex);
 
+int isHexOnSide2 (Hexagone hex);
 
 int isAdjacentHexagone (Hexagone h, Hexagone i);
 

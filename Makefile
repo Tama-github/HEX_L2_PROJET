@@ -1,5 +1,5 @@
-HEX: obj/HEX.o obj/Interface.o obj/hexagone.o obj/board.o obj/game.o obj/queue.o
-		gcc obj/HEX.o obj/Interface.o obj/hexagone.o obj/board.o obj/game.o obj/queue.o -o HEX -g -ggdb `sdl-config --cflags --libs` -lSDL_image -lSDL_ttf
+HEX: obj/HEX.o obj/Interface.o obj/hexagone.o obj/board.o obj/game.o obj/queue.o obj/set.o
+		gcc obj/HEX.o obj/Interface.o obj/hexagone.o obj/board.o obj/game.o obj/queue.o obj/set.o -o HEX -g -ggdb `sdl-config --cflags --libs` -lSDL_image -lSDL_ttf
 
 obj/HEX.o: src/HEX.c
 		gcc -c src/HEX.c -o obj/HEX.o -Wall -g -ggdb -O0
@@ -18,6 +18,9 @@ obj/game.o: src/game.c
 
 obj/queue.o: src/queue.c
 		gcc -c src/queue.c -o obj/queue.o -Wall -g -ggdb -O0
+
+obj/set.o: src/set.c
+		gcc -c src/set.c -o obj/set.o -Wall -g -ggdb -O0
 
 clean:
 		rm -f obj/*.o HEX

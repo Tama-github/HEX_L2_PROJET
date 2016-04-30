@@ -11,7 +11,7 @@
 
 Board createBoard () {
 	Board b = (Board)malloc(sizeof(struct s_Board));
-	if (b == NULL) exit (2);
+	assert(b != NULL);
 	int i, j;
 	int x = FIRST_HEXAGONE_POSITION_X;
 	int y = FIRST_HEXAGONE_POSITION_Y;
@@ -33,7 +33,6 @@ void deleteBoard (Board b) {
 			deleteHexagone(b->board[i][j]);
 		}
 	}
-	b = (Board)realloc(b, sizeof(struct s_Board));
 	free(b);
 }
 

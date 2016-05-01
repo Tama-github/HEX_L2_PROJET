@@ -233,7 +233,7 @@ int loadGame (Game game) {
 			d = 0;
 		}
 		if (idPlayer != -1) {
-			addHexagone(tmp, game->board->board[i-1][j-1]);
+			addHexagone(tmp, game->board->board[i][j-1]);
 		} else {
 			addSetToVictory(game->victory, tmp);
 			d = 1;

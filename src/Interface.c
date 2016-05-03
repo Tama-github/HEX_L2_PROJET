@@ -320,7 +320,6 @@ void displayLog (Window window, TTF_Font *police, Queue qu) {
         SDL_BlitSurface(window->text[i], NULL, window->screen, &pos);
         pos.y = pos.y+17;
     }
-    free(txt);
 }
 
 void logBeginGame (Queue qu) {

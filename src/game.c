@@ -100,7 +100,7 @@ Victory removeSetFromVictory (Victory v, Set set) {
 }
 
 Game createGame () {
-	Game game = (Game)malloc(sizeof(struct s_Game*));
+	Game game = (Game)malloc(sizeof(struct s_Game));
 	if (game == NULL) exit (2);
 	game->gameStatus = GAME_UNSET;
 	game->victory = createVictory();

@@ -11,7 +11,7 @@
 
 
 Hexagone createHexagone (int x, int y) {
-  Hexagone h = (Hexagone)malloc(sizeof(struct et_hexagone*));
+  Hexagone h = (Hexagone)malloc(sizeof(struct et_hexagone));
   if (h == NULL) exit (2);
   h->x = x;
   h->y = y;

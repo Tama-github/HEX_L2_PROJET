@@ -36,6 +36,7 @@ Detruit la cellule passé en paramettre
 
 **************************************************/
 void deleteCell (Cell* cell) {
+	if (cell->txt != NULL) free(cell->txt); 
 	free(cell);
 }
 

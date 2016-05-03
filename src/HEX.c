@@ -45,7 +45,6 @@ int main (int argc, char * argv[]) {
     
     /*initialisation of the font*/
     police = TTF_OpenFont("police/arial.ttf", 14);
-
     /*
      * Initialisation of the window
      */
@@ -198,7 +197,8 @@ int main (int argc, char * argv[]) {
         displayBoard(game, window);
         refreshWindow(window);
     }
-    //deleteGame(game);
+    deleteGame(game);
     closeWindow(window);
+    TTF_CloseFont(police);
 	return 0;
 }

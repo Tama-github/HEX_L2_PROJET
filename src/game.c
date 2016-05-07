@@ -146,7 +146,6 @@ void playAnHexagone (Hexagone hex, Game game) {
 		}
 		c = c->next;
 	}
-	showVictory(game->victory);
 	nextTurn(game);
 }
 
@@ -239,6 +238,5 @@ int loadGame (Game game) {
 			d = 1;
 		}
 	}
-	showVictory(game->victory);
 	return 1;
 }

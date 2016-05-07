@@ -5,20 +5,20 @@
 #include "SDL/SDL_image.h"
 #include "SDL/SDL_ttf.h"
 
-#include "board.h"
 #include "game.h"
 #include "queue.h"
 
 #include "constantes.h"
 
-typedef struct s_Board* Board;
 
+/* Structure où on stock les images pour rempli un hexagone */
 typedef struct s_ImgHexagones {
 	SDL_Surface * emptyHex;
 	SDL_Surface * redHex;
 	SDL_Surface * blueHex;
 }* ImgHexagones;
 
+/* Structure représentant la fenêtre, l'interface graphique. */
 struct s_Window {
 	int menuType;
 

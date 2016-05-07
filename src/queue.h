@@ -48,7 +48,7 @@ Defile un element de la file passé en paramettre et le retourne.
 char* defiler (Queue f);
 
 /****************************************************
-Retourne dans un tableau tout le contenu de la file et le retourne.
+Retourne dans un tableau à deux dimenssions le contenu de la file.
 @entré f : la file.
 @sortie : Le tableau d'élements.
 

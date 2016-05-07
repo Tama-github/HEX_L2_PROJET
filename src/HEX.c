@@ -21,7 +21,6 @@ int main (int argc, char * argv[]) {
     Game game;
     Hexagone hex;
     game = createGame();
-    printf("%p\n",game->board->board);
     int i, j;
     int confirmQ = 0;
     int confirmM = 0;
@@ -69,7 +68,6 @@ int main (int argc, char * argv[]) {
                 break;
             case SDL_MOUSEBUTTONUP:
                 if (event.button.button == SDL_BUTTON_LEFT) {
-                    printf("CLICK : x:%d  y:%d\n", event.button.x, event.button.y);
                     /* Manage on menu's clic */
                     if (isPosOnbutton(window->menu, event.button.x, event.button.y)) {
                         if (isPosOnbutton(window->buttonMenu, event.button.x, event.button.y)) {

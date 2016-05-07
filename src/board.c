@@ -56,6 +56,8 @@ Hexagone findHexagoneOnBoard (Board board, int x, int y, int *v, int *w) {
 	return res;
 }
 
+
+
 void reinitializeBoard (Board b) {
 	int i, j;
 	for (i = 0; i < BOARD_LENGTH; i++) {

@@ -6,6 +6,7 @@
 
 #include "constantes.h"
 
+/* Structure représentant un hexagone. */
 struct et_hexagone{
   int idPlayer; /* id du joueur qui a joue l'hexagone*/
   int x; 		/* Positionement en pixel sur l'axe des x */
@@ -53,10 +54,29 @@ sur la surface de l'hexagone passé en paramettre.
 ******************************************************/
 int isCoordOnHexagone (Hexagone h, int x, int y);
 
+/****************************************************
+Verifie si l'hexagone passé en parametre est sur le bord haut ou sur le bord gauche du plateau
+@entré hex : L'hexagone à verifier
+@sortie : retourne 1 si l'hexagone est sur le bord haut ou gauche du plateau, 0 si non.
+
+******************************************************/
 int isHexOnSide1 (Hexagone hex);
 
+/****************************************************
+Verifie si l'hexagone passé en parametre est sur le bord bas ou sur le bord droit du plateau
+@entré hex : L'hexagone à verifier
+@sortie : retourne 1 si l'hexagone est sur le bord bas ou droite du plateau, 0 si non.
+
+******************************************************/
 int isHexOnSide2 (Hexagone hex);
 
+/****************************************************
+Verifie si deux hexagones sont adjascents.
+@entré h : Un hexagone
+@entré i : Un autre Hexagone
+@sortie : 1 si les deu hexagones sont adjascent, 0 si non.
+
+******************************************************/
 int isAdjacentHexagone (Hexagone h, Hexagone i);
 
 #endif

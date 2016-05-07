@@ -5,7 +5,7 @@
 Définition d'une liste pour la suite
 
 **************************************************/
-/* Un element de la file */
+/* Structure représentant un élément de la file */
 typedef struct s_Cell {
 	struct s_Cell* next;
 	struct s_Cell* last;
@@ -39,7 +39,7 @@ void deleteCell (Cell* cell) {
 	free(cell);
 }
 
-/* La file */
+/* Structure représentant la file */
 struct s_Queue {
 	Cell* tete;
 	Cell* queu;

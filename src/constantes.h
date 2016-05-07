@@ -5,11 +5,12 @@
 #define HEXAGONE_LENGTH 30
 #define HEXAGONE_HEIGHT 29
 
-/* Game */
+/* Game status*/
 #define GAME_UNSET 0
 #define GAME_IN_PROGRESS 1
 #define GAME_END 2
 
+/* Player status */
 #define UNPLAYED 0
 #define ID_PLAYER_1 1
 #define ID_PLAYER_2 2
@@ -93,6 +94,7 @@
 /* Board */
 #define BOARD_LENGTH 11
 
+/* Infos relatives au plateau */
 #define FIRST_HEXAGONE_POSITION_X (BOARD_POSITION_X + 19)
 #define FIRST_HEXAGONE_POSITION_Y (BOARD_POSITION_Y + 19)
 #define LAST_HEXAGONE_POSITION_Y 409 

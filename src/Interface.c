@@ -95,25 +95,25 @@ Window createWindow () {
 
 void freeButtons (Window window) {
 	if (window->buttonMenu != NULL) 
-    SDL_FreeSurface(window->buttonMenu);
+        SDL_FreeSurface(window->buttonMenu);
 	if (window->buttonPlay != NULL)
-    SDL_FreeSurface(window->buttonPlay);
+        SDL_FreeSurface(window->buttonPlay);
 	if (window->buttonLoad != NULL)
-    SDL_FreeSurface(window->buttonLoad);
+        SDL_FreeSurface(window->buttonLoad);
 	if (window->buttonSave != NULL)
-    SDL_FreeSurface(window->buttonSave);
+        SDL_FreeSurface(window->buttonSave);
 	if (window->buttonUndo != NULL)
-    SDL_FreeSurface(window->buttonUndo);
+        SDL_FreeSurface(window->buttonUndo);
 	if (window->buttonHistoric != NULL)
-    SDL_FreeSurface(window->buttonHistoric);
+        SDL_FreeSurface(window->buttonHistoric);
 	if (window->buttonQuit != NULL)
-    SDL_FreeSurface(window->buttonQuit);
+        SDL_FreeSurface(window->buttonQuit);
 	if (window->buttonHxH != NULL)
-    SDL_FreeSurface(window->buttonHxH);
+        SDL_FreeSurface(window->buttonHxH);
 	if (window->buttonHxIA1 != NULL)
-    SDL_FreeSurface(window->buttonHxIA1);
+        SDL_FreeSurface(window->buttonHxIA1);
 	if (window->buttonHxIA2 != NULL)
-    SDL_FreeSurface(window->buttonHxIA2);
+        SDL_FreeSurface(window->buttonHxIA2);
     
 
     SDL_Rect pos;
@@ -123,7 +123,6 @@ void freeButtons (Window window) {
 }
 
 void closeWindow (Window window) {
-
 	freeButtons(window);
     deleteImgHexagone(window->hex);
     SDL_FreeSurface(window->menu);

@@ -29,4 +29,4 @@ obj/set.o: src/set.c
 		gcc -c src/set.c -o obj/set.o -Wall -g -ggdb -O0
 
 clean:
-		rm -f obj/*.o HEX
+		rm -f obj/*.o HEX tests_HEX

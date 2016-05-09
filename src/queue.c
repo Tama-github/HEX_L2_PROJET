@@ -123,7 +123,7 @@ char* defiler (Queue f) {
 	Cell* tmp = f->tete;
 	char* res = tmp->txt;
 	f->tete = tmp->last;
-	f->tete->next = NULL;
+	if (f->tete != NULL) f->tete->next = NULL;
 	f->size = f->size - 1;
 	deleteCell(tmp);
 	return res;

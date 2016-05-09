@@ -93,9 +93,13 @@ int main(){
   printf("enfiler OK\n");
   printf("emptyQ OK\n");
   
-  assert(getSize(q)!=0);
+  assert(getSize(q)==1);
   printf("getSize OK\n");   
   
+  char* c=defiler(q);
+  assert(strcmp(c,"elem")==0);
+  printf("defiler OK\n");
+   
   deleteQueue(q);
   assert(q!=NULL);
   printf("deleteQueue OK\n");
@@ -137,6 +141,5 @@ int main(){
   assert(g!=NULL);
   printf("deleteGame OK\n");
   
-  return(0);
+  return 0;
 }
-
